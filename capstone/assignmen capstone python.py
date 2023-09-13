@@ -120,8 +120,8 @@ def main_menu():
         print("2. buat data karyawan")
         print("3. update data karyawan")
         print("4. hapus karyawan")
-        print("5. Exit")
-        print("6.performa karyawan")
+        print("5. performa karyawan")
+        print("6.exit")
 
         choice = input("pilih opsi yang diinginkan: ")
 

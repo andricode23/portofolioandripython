@@ -1,6 +1,7 @@
-CAPSTONE MANAGEPLOYEE
+                                                                                             CAPSTONE MANAGEPLOYEE
 
 Manageployee is a simple application that can be used by any kind of companies that want to manage their company in simple way. This application will help any employers, resource department and supervisors who want to manage and evaluate their employee. There are 5 main features you currently can use:
+
 1.	 Read: this feature will allows you to read any employee data that is stored in the database
 2.	Update: you can update the employee database such as “performa” and “jabatan”
 3.	Add: you can add new employee give the detail about them.

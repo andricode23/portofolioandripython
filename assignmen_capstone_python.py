@@ -42,10 +42,9 @@ def display_employee_by_id(employee_id):
         if employee["ID"] == employee_id:
             print(tabulate([employee], headers="keys", tablefmt="grid"))
             return
-    print("Employee with ID {} not found.".format(employee_id))       
+    print("ID karyawan nomor {} tidak ditemukan.".format(employee_id))       
 
 
-# Menambah karyawan
 def create_employee():
     global data
     while True:
@@ -61,35 +60,36 @@ def create_employee():
             for employee in data:
                 if employee["ID"] == emp_id:
                     print("Data karyawan dengan ID tersebut sudah ada.")
-                    continue_option = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin melanjutkan? (yes/no): ").lower()
-                    if continue_option == "no":
-                        return  
+                    continue_option = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin memasukkan ID baru? (yes/no): ").lower()
+                    if continue_option == "yes":
+                        
+                        continue
+                    else:
+                        
+                        return
+
+            full_name = input("Masukkan nama lengkap: ")
+            position = input("Masukkan jabatan: ")
+            hiring_date = input("Masukkan tanggal kerja (YYYY-MM-DD): ")
+            performance = input("Masukkan hasil performa: ")
+
+            new_employee = {
+                "nama_lengkap": full_name,
+                "ID": emp_id,
+                "jabatan": position,
+                "tanggal_mulai_kerja": hiring_date,
+                "performa": performance,
+            }
+
+            
+            confirm_add = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin menyimpan data baru? (yes/no): ").lower()
+            if confirm_add == "yes":
+                data.append(new_employee)
+                print("Data karyawan berhasil disimpan.")
+                print(tabulate(data, headers="keys", tablefmt="grid"))
             else:
-                full_name = input("Masukkan nama lengkap: ")
-                position = input("Masukkan jabatan: ")
-                hiring_date = input("Masukkan tanggal kerja (YYYY-MM-DD): ")
-                performance = input("Masukkan hasil performa: ")
-
-                new_employee = {
-                    "nama_lengkap": full_name,
-                    "ID": emp_id,
-                    "jabatan": position,
-                    "tanggal_mulai_kerja": hiring_date,
-                    "performa": performance,
-                }
-
-                # Confirmation step
-                confirm_add = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin menyimpan data baru? (yes/no): ").lower()
-                if confirm_add == "yes":
-                    data.append(new_employee)
-                    print("Data karyawan berhasil disimpan.")
-                    print(tabulate(data, headers="keys", tablefmt="grid"))
-                else:
-                    print("Data karyawan tidak disimpan.")
-
+                print("Data karyawan tidak disimpan.")
    
-
-
     
 # Fungsi update karyawan
 def update_employee():
@@ -111,24 +111,35 @@ def update_employee():
                         print(tabulate([employee], headers="keys", tablefmt="pretty"))
 
                         field_to_update = input("Bagian yang mau diupdate (nama_lengkap/jabatan/tanggal_mulai_kerja/performa): ").strip()
-                        new_value = input(f"Masukkan data baru untuk {field_to_update}: ")
 
                         if field_to_update in employee:
-                            employee[field_to_update] = new_value
-                            print("Data karyawan berhasil diupdate.")
+                            current_value = employee[field_to_update]
+                            new_value = input(f"Data saat ini: {current_value}\nMasukkan data baru untuk {field_to_update} (kosongkan jika tidak ingin mengubah): ").strip()
+
+                            if new_value != "":
+                                print(f"Data baru untuk {field_to_update}: {new_value}")
+                                confirm_update = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda yakin ingin menyimpan perubahan ini? (yes/no): ").lower()
+                                if confirm_update == "yes":
+                                    employee[field_to_update] = new_value
+                                    print("Data karyawan berhasil diupdate.")
+                                else:
+                                    print("Perubahan dibatalkan.")
+                            else:
+                                print("Tidak ada perubahan pada data karyawan.")
+
                             print(tabulate(data, headers="keys", tablefmt="grid"))
+
+                            continue_option = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin melanjutkan update? (yes/no): ").lower()
+                            if continue_option == "no":
+                                return  
                         else:
                             print("Bagian yang dimaksud tidak ada dalam data karyawan.")
 
-                        continue_option = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin melanjutkan update? (yes/no): ").lower()
-                        if continue_option == "no":
-                            return  
                     break
             else:
                 print("ID karyawan tidak ditemukan.")
         else:
             print("Pilihan tidak valid. Harap pilih 1 atau 2.")
-
 
 # Fungsi menghapus karyawan
 def delete_employee():
@@ -231,3 +242,4 @@ def main_menu():
 
 if __name__ == "__main__":
     main_menu()
+

@@ -1,11 +1,6 @@
 from tabulate import tabulate
-import random
 import csv
-import flask
 import pyinputplus as pyip
-
-
-
 
 
 # Sample data
@@ -19,87 +14,165 @@ data = [
 
 # Menunjukkan data karyawan 
 def display_employee_data():
-    headers = ["nama_lengkap", "ID"]
-    partial_data = [{key: employee[key] for key in headers} for employee in data]
-    print(tabulate(partial_data, headers="keys", tablefmt="grid"))
+    while True:
+        print("\nTampilkan data karyawan")
+        print("1. Tampilkan sebagian data karyawan")
+        print("2. Tampilkan berdasarkan ID")
+        print("3. Kembali ke menu utama")
 
-    show_full_data = input("Apakah Anda ingin menampilkan seluruh data karyawan? (yes/no): ")
-    if show_full_data.lower() == "yes":
-        print(tabulate(data, headers="keys", tablefmt="grid"))
+        display_choice = pyip.inputChoice(["1", "2", "3"], prompt="Pilih opsi: ")
+
+        if display_choice == "1":
+            headers = ["nama_lengkap", "ID"]
+            partial_data = [{key: employee[key] for key in headers} for employee in data]
+            print(tabulate(partial_data, headers="keys", tablefmt="grid"))
+
+            show_full_data = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin menampilkan seluruh data karyawan? (yes/no): ").lower()
+            if show_full_data == "yes":
+                print(tabulate(data, headers="keys", tablefmt="grid"))
+        elif display_choice == "2":
+            employee_id = pyip.inputInt(prompt="Masukkan ID karyawan yang ingin ditampilkan: ")
+            display_employee_by_id(employee_id)
+        elif display_choice == "3":
+            break
+
+
+ 
+def display_employee_by_id(employee_id):
+    for employee in data:
+        if employee["ID"] == employee_id:
+            print(tabulate([employee], headers="keys", tablefmt="grid"))
+            return
+    print("Employee with ID {} not found.".format(employee_id))       
 
 
 # Menambah karyawan
 def create_employee():
     global data
-    emp_id = pyip.inputInt(prompt="Masukkan nomor ID: ")
+    while True:
+        print("\nTambahkan Data Karyawan")
+        print(tabulate(data, headers="keys", tablefmt="grid"))
+        add_option = pyip.inputChoice(["1", "2"],  prompt="1. Kembali ke menu utama\n2. Lanjutkan menambahkan data karyawan\nPilih opsi: ")
 
-    for employee in data:
-        if employee["ID"] == emp_id:
-            print("Data karyawan dengan ID tersebut sudah ada.")
-            continue_option = input("Apakah Anda ingin melanjutkan? (yes/no): ")
-            if continue_option.lower() == "yes":
-                create_employee()  # Recursively call create_employee to try adding a new employee
-            return
+        if add_option == "1":
+            break  
+        elif add_option == "2":
+            emp_id = pyip.inputInt(prompt="Masukkan nomor ID: ")
 
-    full_name = input("Masukkan nama lengkap: ")
-    position = input("Masukkan jabatan: ")
-    hiring_date = input("Masukkan tanggal kerja (YYYY-MM-DD): ")
-    performance = input("Masukkan hasil performa: ")
+            for employee in data:
+                if employee["ID"] == emp_id:
+                    print("Data karyawan dengan ID tersebut sudah ada.")
+                    continue_option = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin melanjutkan? (yes/no): ").lower()
+                    if continue_option == "no":
+                        return  
+            else:
+                full_name = input("Masukkan nama lengkap: ")
+                position = input("Masukkan jabatan: ")
+                hiring_date = input("Masukkan tanggal kerja (YYYY-MM-DD): ")
+                performance = input("Masukkan hasil performa: ")
 
-    new_employee = {
-        "nama_lengkap": full_name,
-        "ID": emp_id,
-        "jabatan": position,
-        "tanggal_mulai_kerja": hiring_date,
-        "performa": performance,
-    }
+                new_employee = {
+                    "nama_lengkap": full_name,
+                    "ID": emp_id,
+                    "jabatan": position,
+                    "tanggal_mulai_kerja": hiring_date,
+                    "performa": performance,
+                }
 
-    save_decision = input("Apakah Anda ingin menyimpan data baru? (yes/no): ")
-    if save_decision.lower() == "yes":
-        data.append(new_employee)
-        print("Data karyawan berhasil disimpan.")
-    else:
-        print("Data karyawan tidak disimpan.")
+                # Confirmation step
+                confirm_add = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin menyimpan data baru? (yes/no): ").lower()
+                if confirm_add == "yes":
+                    data.append(new_employee)
+                    print("Data karyawan berhasil disimpan.")
+                    print(tabulate(data, headers="keys", tablefmt="grid"))
+                else:
+                    print("Data karyawan tidak disimpan.")
 
-    print("Data karyawan berhasil dibuat.")
-    display_employee_data()
+   
+
+
     
 # Fungsi update karyawan
 def update_employee():
     global data
-    ID = pyip.inputInt(prompt="Masukkan ID karyawan yang ingin diupdate: ")
+    while True:
+        print("\nUpdate Data Karyawan")
+        print(tabulate(data, headers="keys", tablefmt="grid"))  
+        update_option = pyip.inputChoice(["1", "2"],  prompt="1. Kembali ke menu utama\n2. Lanjutkan update data karyawan\nPilih opsi: ")
 
-    for employee in data:
-        if employee["ID"] == ID:
-            print("Data karyawan:")
-            print(tabulate([employee], headers="keys", tablefmt="pretty"))
+        if update_option == "1":
+            break
+        elif update_option == "2":
+            emp_id = pyip.inputInt(prompt="Masukkan nomor ID: ")
 
-            field_to_update = input("Bagian untuk diupdate (nama_lengkap/jabatan/tanggal_mulai_kerja/performa): ").strip()
-            new_value = input(f"Masukkan nilai baru untuk {field_to_update}: ")
+            for employee in data:
+                if employee["ID"] == emp_id:
+                    while True:
+                        print("Data karyawan:")
+                        print(tabulate([employee], headers="keys", tablefmt="pretty"))
 
-            if field_to_update in employee:
-                employee[field_to_update] = new_value
-                print("Data karyawan berhasil diupdate.")
-                display_employee_data()
-                return
+                        field_to_update = input("Bagian yang mau diupdate (nama_lengkap/jabatan/tanggal_mulai_kerja/performa): ").strip()
+                        new_value = input(f"Masukkan data baru untuk {field_to_update}: ")
 
-    print("ID karyawan tidak ditemukan.")
+                        if field_to_update in employee:
+                            employee[field_to_update] = new_value
+                            print("Data karyawan berhasil diupdate.")
+                            print(tabulate(data, headers="keys", tablefmt="grid"))
+                        else:
+                            print("Bagian yang dimaksud tidak ada dalam data karyawan.")
+
+                        continue_option = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda ingin melanjutkan update? (yes/no): ").lower()
+                        if continue_option == "no":
+                            return  
+                    break
+            else:
+                print("ID karyawan tidak ditemukan.")
+        else:
+            print("Pilihan tidak valid. Harap pilih 1 atau 2.")
+
 
 # Fungsi menghapus karyawan
 def delete_employee():
     global data
-    emp_id = pyip.inputInt(prompt="Masukkan ID karyawan yang ingin dihapus: ")
+    while True:
+        print("\nHapus Data Karyawan")
+        print(tabulate(data, headers="keys", tablefmt="grid"))
+        delete_option = pyip.inputChoice(["1", "2"], prompt="1. Kembali ke menu utama\n2. Lanjutkan menghapus data karyawan\nPilih opsi: ")
 
-    for employee in data:
-        if employee["ID"] == emp_id:
-            data.remove(employee)
-            print("Data karyawan berhasil dihapus.")
-            display_employee_data()
-            return
+        if delete_option == "1":
+            break  
+        elif delete_option == "2":
+            emp_id = pyip.inputInt(prompt="Masukkan ID karyawan yang ingin dihapus: ")
 
-    print("ID karyawan tidak ditemukan.")
+            for employee in data:
+                if employee["ID"] == emp_id:
+                    print("Data karyawan:")
+                    print(tabulate([employee], headers="keys", tablefmt="pretty"))
+
+                    confirm_delete = pyip.inputChoice(["yes", "no"], prompt="Apakah Anda yakin ingin menghapus data karyawan ini? (yes/no): ").lower()
+
+                    if confirm_delete == "yes":
+                        data.remove(employee)
+                        print("Data karyawan berhasil dihapus.")
+                        
+
+                    continue_option = pyip.inputChoice(["1", "2"],  prompt="1. Kembali ke menu utama\n2. Lanjutkan menghapus data karyawan\nPilih opsi: ")
+
+                    if continue_option == "1":
+                        return  
+                    elif continue_option == "2":
+                        break  
+                    else:
+                        print("Pilihan tidak valid. Kembali ke menu utama.")
+                    break
+            else:
+                print("ID karyawan tidak ditemukan.")
+        else:
+            print("Pilihan tidak valid. Harap pilih 1 atau 2.")
+
+
     
-# Categorize employees based on performance
+# klasifikasikan karyawan
 def categorize_employees():
     categories = {
         "ajukan ke HRD": [],
@@ -117,7 +190,7 @@ def categorize_employees():
 
     return categories
 
-# Function to print categorized employee data
+# memasukkan dan membuat tabel klasifikasi karyawan.
 def print_categorized_data(categories):
     categorized_data = []
 

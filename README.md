@@ -1,6 +1,6 @@
              CAPSTONE MANAGEPLOYEE
 
-Manageployee is a simple application that can be used by any kind of companies that want to manage their company in simple way. This application will help any employers, resource department and supervisors who want to manage and evaluate their employee. There are 5 main features you currently can use:
+Manageployee is a simple application that can be used for  any kind of companies that want to manage their company in simple way. This application will help any employers, resource department and supervisors who want to manage and evaluate their employee. There are 5 main features you currently can use:
 
 
 1.	 Read: this feature will allows you to read any employee data that is stored in the database
